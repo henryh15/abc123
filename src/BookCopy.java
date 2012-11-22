@@ -15,36 +15,30 @@ public class BookCopy {
 	}
 	
 	/*
-     * inserts a book copy
+     * inserts a book copy and return feedback about the insertion in string 
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      */ 
-    private void insertBookCopy() throws SQLException, IOException{
+    private String insertBookCopy(String callNumber, String copyNo, char status) throws SQLException, IOException{
 	
-	String             callNumber;
-	String			   copyNo;
-	char			   status;
+    String msg;
 	PreparedStatement  ps;
 	  
 	  ps = con.prepareStatement("INSERT INTO bookCopy VALUES (?,?,?)");
 	
-	  System.out.print("\nBook Call Number: ");
-	  callNumber = in.readLine();
 	  ps.setString(1, callNumber);
-	  
-	  System.out.print("\nBook Copy Number: ");
-	  copyNo = in.readLine();
 	  ps.setString(2, copyNo);
-	  
-	  System.out.print("\nBook Status: ");
-	  String copyNoTemp = in.readLine();
-	  ps.setString(0, String.valueOf(copyNoTemp));
+	  ps.setString(0, String.valueOf(status));
 
-	  ps.executeUpdate();
+	  if(ps.executeUpdate()==0)
+		  msg = "insertion failed";
+	  else
+		  msg = "inserted successfully";
 
 	  // commit work 
 	  con.commit();
 
 	  ps.close();
+	  return msg;
 	}
 
 
@@ -52,30 +46,25 @@ public class BookCopy {
      * deletes a book copy
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      */ 
-    private void deleteBookCopy() throws SQLException, IOException
+    private String deleteBookCopy(String callNumber, String copyNo) throws SQLException, IOException
     {
-    	String             callNumber;
-    	String             copyNo;
+    	String msg;
     	PreparedStatement  ps;
 	  
 	  ps = con.prepareStatement("DELETE FROM book WHERE callNumber = ? and copyNo = ?");
 	
-	  System.out.print("\nBook Call Number: ");
-	  callNumber = in.readLine();
 	  ps.setString(1, callNumber);
-	  
-	  System.out.print("\nBook Copy Number: ");
-	  copyNo = in.readLine();
 	  ps.setString(2, copyNo);
 
 	  int rowCount = ps.executeUpdate();
 
 	  if (rowCount == 0)
-	  {
-	      System.out.println("\nBook " + callNumber + copyNo + " does not exist!");
-	  }
+	      msg = "\nBook " + callNumber + copyNo + " does not exist!";
+	  else
+		  msg = "Deleted Book " + callNumber + copyNo + " successfully!";
 	  con.commit();
 	  ps.close();
+	  return msg;
 
     }
 	

@@ -20,28 +20,24 @@ public class BorrowerType {
      * inserts a borrower type
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      */ 
-    private void insertBorrowerType() throws SQLException, IOException{
+    private String insertBorrowerType( int bookTimeLimit, String borrower_type) throws SQLException, IOException{
 	
-    int                bookTimeLimit;
-	String             borrower_type;
 	PreparedStatement  ps;
+	String msg;
 	  
 	  ps = con.prepareStatement("INSERT INTO borrowerType VALUES (?,?)");
-	
-	  System.out.print("\nBorrower Type: ");
-	  borrower_type = in.readLine();
 	  ps.setString(1, borrower_type);
-	  
-	  System.out.print("\nBook Time Limit: ");
-	  bookTimeLimit = Integer.parseInt(in.readLine());
 	  ps.setInt(2,bookTimeLimit);
 
-	  ps.executeUpdate();
+	  if(ps.executeUpdate()==0)
+		  msg = "insertion failed";
+	  else
+		  msg = "inserted successfully";
 
 	  // commit work 
 	  con.commit();
-
 	  ps.close();
+	  return msg;
 	}
 
 
@@ -49,27 +45,22 @@ public class BorrowerType {
      * deletes a borrower type
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      */ 
-    private void deleteBorrowerType() throws SQLException, IOException
+    private String deleteBorrowerType(String borrower_type) throws SQLException, IOException
     {
-    	String             borrower_type;
     	PreparedStatement  ps;
+    	String msg;
 	  
 	  ps = con.prepareStatement("DELETE FROM borrowerType WHERE borrower_type = ?");
-	
-	  System.out.print("\nBorrower Type: ");
-	  borrower_type = in.readLine();
 	  ps.setString(1, borrower_type);
 
 	  int rowCount = ps.executeUpdate();
-
 	  if (rowCount == 0)
-	  {
-	      System.out.println("\nBorrower Type " + borrower_type + " does not exist!");
-	  }
+	      msg = "\nBorrower Type " + borrower_type + " does not exist!";
+	  else
+		  msg = "Deleted Borrower Type" + borrower_type + "successfully";
 
 	  con.commit();
-
 	  ps.close();
-
+	  return msg;
     }
 }

@@ -10,19 +10,19 @@ public class Main {
     	
     	
     	
-    	try
-    	{
-    		b.insertBook();
-    		b.deleteBook();
-    	}
-    	catch (IOException e)
-    	{
-    	    System.out.println("IOException!");
-    	}
-    	catch (SQLException ex)
-    	{
-    	    System.out.println("Message: " + ex.getMessage());
-    	}	
+//    	try
+//    	{
+//    		b.insertBook();
+//    		b.deleteBook();
+//    	}
+//    	catch (IOException e)
+//    	{
+//    	    System.out.println("IOException!");
+//    	}
+//    	catch (SQLException ex)
+//    	{
+//    	    System.out.println("Message: " + ex.getMessage());
+//    	}	
         
     }
 
