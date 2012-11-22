@@ -10,7 +10,7 @@ public class DBConnect {
 	
 	
     public DBConnect(){
-    	System.out.println("Plz enter username and password:");
+    	System.out.println("Plz enter your sqlplus username and password:\n");
     	Scanner sc = new Scanner(System.in);
     	
     	loadDriver();
