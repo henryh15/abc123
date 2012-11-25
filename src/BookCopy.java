@@ -18,7 +18,7 @@ public class BookCopy {
      * inserts a book copy and return feedback about the insertion in string 
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      */ 
-    private String insertBookCopy(String callNumber, String copyNo, char status) throws SQLException, IOException{
+    public String insertBookCopy(String callNumber, String copyNo, String status) throws SQLException, IOException{
 	
     String msg;
 	PreparedStatement  ps;
@@ -27,7 +27,7 @@ public class BookCopy {
 	
 	  ps.setString(1, callNumber);
 	  ps.setString(2, copyNo);
-	  ps.setString(0, String.valueOf(status));
+	  ps.setString(0, status);
 
 	  if(ps.executeUpdate()==0)
 		  msg = "insertion failed";

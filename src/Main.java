@@ -15,6 +15,8 @@ public class Main {
 	
 	private static Borrower borrower;
 	private static Book book;
+	private static BookCopy bookCopy;
+	private static BorrowerType borrowerType;
 	
 	private JFrame frame;
 	private JTabbedPane tabbedPane;
@@ -83,33 +85,67 @@ public class Main {
 				panel.add(bEmail);
 				panel.add(new JLabel("Borrower Sin/Student Number:"));
 				panel.add(bSinOrStN);
-				panel.add(new JLabel("Borrower Account Expiry Date"));
+				panel.add(new JLabel("Borrower Account Expiry Date (format example: January 23 2012):"));
 				panel.add(bExpiryDate);
 				
 				int result = JOptionPane.showConfirmDialog(null, panel, "Add Borrower", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE);
 				if (result == JOptionPane.OK_OPTION) {
-					if (bid.getText().equals("") || bPassword.getText().equals("") || bName.getText().equals("") || bType.getText().equals("") || bAddress.getText().equals("") || bPhone.getText().equals("") || bEmail.getText().equals("") || bSinOrStN.getText().equals("") || bExpiryDate.getText().equals("")) {
-						JOptionPane.showMessageDialog(null, "Fill in all Parameters!", "Error", JOptionPane.PLAIN_MESSAGE);
+					if (bid.getText().equals("") || !bType.equals("Student") || !bType.equals("Faculty") || !bType.equals("Staff")) {
+						JOptionPane.showMessageDialog(null, "Borrower ID cannot be empty and Type must equal to either Student, Faculty, or Staff!", "Error", JOptionPane.PLAIN_MESSAGE);
 					}
 					else {
 					String message = "";
 					String expiryDate = bExpiryDate.getText();
-					Date dExpireDate = null;
+					if (!(expiryDate.equals(""))) {
+						Date dExpireDate = null;
+							try {
+								dExpireDate = new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(expiryDate);
+							} catch (ParseException e2) {
+								// TODO Auto-generated catch block
+								e2.printStackTrace();
+							}			
+							java.sql.Date sqlDate = new java.sql.Date(dExpireDate.getTime());
+							try {
+							message = borrower.insertBorrower(Integer.parseInt(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.parseInt(bPhone.getText()), bEmail.getText(), Integer.parseInt(bSinOrStN.getText()), sqlDate, bType.getText());
+							if (bType.getText().equals("Student")) {
+								borrowerType.insertBorrowerType(2, bType.getText());
+							}
+							else if (bType.getText().equals("Faculty")) {
+								borrowerType.insertBorrowerType(12, bType.getText());
+							}
+							else if (bType.getText().equals("Staff")) {
+								borrowerType.insertBorrowerType(6, bType.getText());
+							}
+						} catch (SQLException e1) {
+							message = "SQL Exception Caught";
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							message = "IO Exception Caught";
+							e1.printStackTrace();
+						}
+					}
+					else {
 						try {
-							dExpireDate = new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(expiryDate);
-						} catch (ParseException e2) {
-							// TODO Auto-generated catch block
-							e2.printStackTrace();
-						}			
-						java.sql.Date sqlDate = new java.sql.Date(dExpireDate.getTime());
-						try {
-						message = borrower.insertBorrower(Integer.parseInt(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.parseInt(bPhone.getText()), bEmail.getText(), Integer.parseInt(bSinOrStN.getText()), sqlDate, bType.getText());
-					} catch (SQLException e1) {
-						message = "SQL Exception Caught";
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						message = "IO Exception Caught";
-						e1.printStackTrace();
+							message = borrower.insertBorrower(Integer.parseInt(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.parseInt(bPhone.getText()), bEmail.getText(), Integer.parseInt(bSinOrStN.getText()), null, bType.getText());
+							if (bType.getText().equals("Student")) {
+								borrowerType.insertBorrowerType(2, bType.getText());
+							}
+							else if (bType.getText().equals("Faculty")) {
+								borrowerType.insertBorrowerType(12, bType.getText());
+							}
+							else if (bType.getText().equals("Staff")) {
+								borrowerType.insertBorrowerType(6, bType.getText());
+							}
+						} catch (NumberFormatException e1) {
+							message = "Number Format Exception";
+							e1.printStackTrace();
+						} catch (SQLException e1) {
+							message = "SQL Exception";
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							message = "IO Exception";
+							e1.printStackTrace();
+						}
 					}
 					JOptionPane.showMessageDialog(null, message, "Insert Status", JOptionPane.PLAIN_MESSAGE);
 					}
@@ -176,35 +212,74 @@ public class Main {
 				panel.add(bTitle);
 				panel.add(new JLabel("Main Author:"));
 				panel.add(bMauthor);
-				panel.add(new JLabel("Publisher"));
+				panel.add(new JLabel("Publisher:"));
 				panel.add(bPublisher);
-				panel.add(new JLabel("Year"));
+				panel.add(new JLabel("Year:"));
 				panel.add(bYear);
 				
 				int result = JOptionPane.showConfirmDialog(null, panel, "Add Book", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE);
 				if (result == JOptionPane.OK_OPTION) {
-					String message = "";
-					try {
-						System.out.println(Integer.parseInt(bIsbn.getText()));
-						System.out.println(bCall.getText());
-						System.out.println(bTitle.getText());
-						System.out.println(bMauthor.getText());
-						System.out.println(bPublisher.getText());
-						System.out.println(Integer.parseInt(bYear.getText()));
-						message = book.insertBook(Integer.parseInt(bIsbn.getText()), bCall.getText(), bTitle.getText(), bMauthor.getText(), bPublisher.getText(), Integer.parseInt(bYear.getText()));	
-					} catch (SQLException e) {
-						message = "SQL Exception";
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						message = "IO Exception";
+					if (bCall.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Call Number cannot be empty!", "Error", JOptionPane.PLAIN_MESSAGE);
 					}
-					JOptionPane.showMessageDialog(null, message, "Insert Status", JOptionPane.PLAIN_MESSAGE);
+					else {
+						String message = "";
+						try {
+							message = book.insertBook(Integer.parseInt(bIsbn.getText()), bCall.getText(), bTitle.getText(), bMauthor.getText(), bPublisher.getText(), Integer.parseInt(bYear.getText()));
+							bookCopy.insertBookCopy(bCall.getText(), "1", "in");
+							} catch (SQLException e) {
+								message = "SQL Exception";
+								e.printStackTrace();
+							} catch (IOException e) {
+								message = "IO Exception";
+								e.printStackTrace();
+							}
+							JOptionPane.showMessageDialog(null, message, "Insert Status", JOptionPane.PLAIN_MESSAGE);
+						}
 				}
 
 			}
 			
 		});
+		
+		button2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JTextField bCall = new JTextField(5);
+				JTextField bCopyNo = new JTextField(5);
+				
+				JPanel panel = new JPanel(false);
+				panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+				panel.add(new JLabel("Call Number:"));
+				panel.add(bCall);
+				panel.add(new JLabel("Copy Number:"));
+				panel.add(bCopyNo);
+				
+				String message = "";
+				
+				int result = JOptionPane.showConfirmDialog(null, panel, "Add Book Copy", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE);
+				if (result == JOptionPane.OK_OPTION) {
+					if (bCall.getText().equals("") || bCopyNo.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Call Number and Copy Number cannot be empty!", "Error", JOptionPane.PLAIN_MESSAGE);
+					}
+					else {
+						try {
+							message = bookCopy.insertBookCopy(bCall.getText(), bCopyNo.getText(), "in");
+						} catch (SQLException e) {
+							message = "SQL Exception";
+							e.printStackTrace();
+						} catch (IOException e) {
+							message = "IO Exception";
+							e.printStackTrace();
+						}
+						JOptionPane.showMessageDialog(null, message, "Insert Status", JOptionPane.PLAIN_MESSAGE);
+					}
+				}
+			}
+			
+		});
+		
 		return panel;
 	}
 
@@ -214,7 +289,9 @@ public class Main {
 	public static void main(String[] args) {
 		DBConnect db = new DBConnect();
 		book = new Book(db);
+		bookCopy = new BookCopy(db);
 		borrower = new Borrower(db);
+		borrowerType = new BorrowerType(db);
 		Main applicationGUI = new Main();
 		applicationGUI.showProgram();
 

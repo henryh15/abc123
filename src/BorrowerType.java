@@ -20,7 +20,7 @@ public class BorrowerType {
      * inserts a borrower type
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      */ 
-    private String insertBorrowerType( int bookTimeLimit, String borrower_type) throws SQLException, IOException{
+    public String insertBorrowerType(int bookTimeLimit, String borrower_type) throws SQLException, IOException{
 	
 	PreparedStatement  ps;
 	String msg;
