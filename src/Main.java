@@ -96,11 +96,10 @@ public class Main {
 						} catch (ParseException e2) {
 							// TODO Auto-generated catch block
 							e2.printStackTrace();
-						}
-					java.sql.Date sqlDate = new java.sql.Date(dExpireDate.getTime());
-					java.sql.Date tempDate = new java.sql.Date(0);
-					try {
-						message = borrower.insertBorrower(Integer.getInteger(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.getInteger(bPhone.getText()), bEmail.getText(), Integer.getInteger(bSinOrStN.getText()), tempDate, bType.getText());
+						}			
+						java.sql.Date sqlDate = new java.sql.Date(dExpireDate.getTime());
+						try {
+						message = borrower.insertBorrower(Integer.getInteger(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.getInteger(bPhone.getText()), bEmail.getText(), Integer.getInteger(bSinOrStN.getText()), sqlDate, bType.getText());
 					} catch (SQLException e1) {
 						message = "SQL Exception Caught";
 						e1.printStackTrace();
