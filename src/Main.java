@@ -2,10 +2,19 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.*;
 
 public class Main {
+	
+	private static Borrower borrower;
+	private static Book book;
 	
 	private JFrame frame;
 	private JTabbedPane tabbedPane;
@@ -79,8 +88,37 @@ public class Main {
 				
 				int result = JOptionPane.showConfirmDialog(null, panel, "Add Borrower", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE);
 				if (result == JOptionPane.OK_OPTION) {
-					
+					String message = "";
+					String expiryDate = bExpiryDate.getText();
+					Date dExpireDate = null;
+						try {
+							dExpireDate = new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(expiryDate);
+						} catch (ParseException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+						}
+					java.sql.Date sqlDate = new java.sql.Date(dExpireDate.getTime());
+					java.sql.Date tempDate = new java.sql.Date(0);
+					try {
+						message = borrower.insertBorrower(Integer.getInteger(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.getInteger(bPhone.getText()), bEmail.getText(), Integer.getInteger(bSinOrStN.getText()), tempDate, bType.getText());
+					} catch (SQLException e1) {
+						message = "SQL Exception Caught";
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						message = "IO Exception Caught";
+						e1.printStackTrace();
+					}
+					JOptionPane.showMessageDialog(null, message, "Insert Status", JOptionPane.PLAIN_MESSAGE);
 				}
+			}
+			
+		});
+		
+		button2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
 			}
 			
 		});
@@ -117,8 +155,9 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		DBConnect db = new DBConnect();
-//		Book b = new Book(db);
+		DBConnect db = new DBConnect();
+		book = new Book(db);
+		borrower = new Borrower(db);
 		Main applicationGUI = new Main();
 		applicationGUI.showProgram();
 

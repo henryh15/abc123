@@ -23,7 +23,7 @@ public class Borrower {
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      * Pass in 0 for phone if phone number is not provided by borrower
      */ 
-    private String insertBorrower(int bid, String password, String name, String addr, int phone, String emailAddr, int sinOrStNo, Date expiryDate,
+    public String insertBorrower(int bid, String password, String name, String addr, int phone, String emailAddr, int sinOrStNo, Date expiryDate,
 	String borrower_type) throws SQLException, IOException{
 	
 	PreparedStatement  ps;
@@ -71,7 +71,7 @@ public class Borrower {
      * Need to catch exception for not passing in arguments for NOT NULL attributes in the DB
      * 
      */ 
-    private String deleteBorrower(int bid) throws SQLException, IOException
+    public String deleteBorrower(int bid) throws SQLException, IOException
     {
 	
 	PreparedStatement  ps;
