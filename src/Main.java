@@ -88,6 +88,10 @@ public class Main {
 				
 				int result = JOptionPane.showConfirmDialog(null, panel, "Add Borrower", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE);
 				if (result == JOptionPane.OK_OPTION) {
+					if (bid.getText().equals("") || bPassword.getText().equals("") || bName.getText().equals("") || bType.getText().equals("") || bAddress.getText().equals("") || bPhone.getText().equals("") || bEmail.getText().equals("") || bSinOrStN.getText().equals("") || bExpiryDate.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Fill in all Parameters!", "Error", JOptionPane.PLAIN_MESSAGE);
+					}
+					else {
 					String message = "";
 					String expiryDate = bExpiryDate.getText();
 					Date dExpireDate = null;
@@ -99,7 +103,7 @@ public class Main {
 						}			
 						java.sql.Date sqlDate = new java.sql.Date(dExpireDate.getTime());
 						try {
-						message = borrower.insertBorrower(Integer.getInteger(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.getInteger(bPhone.getText()), bEmail.getText(), Integer.getInteger(bSinOrStN.getText()), sqlDate, bType.getText());
+						message = borrower.insertBorrower(Integer.parseInt(bid.getText()), bPassword.getText(), bName.getText(), bAddress.getText(), Integer.parseInt(bPhone.getText()), bEmail.getText(), Integer.parseInt(bSinOrStN.getText()), sqlDate, bType.getText());
 					} catch (SQLException e1) {
 						message = "SQL Exception Caught";
 						e1.printStackTrace();
@@ -108,6 +112,7 @@ public class Main {
 						e1.printStackTrace();
 					}
 					JOptionPane.showMessageDialog(null, message, "Insert Status", JOptionPane.PLAIN_MESSAGE);
+					}
 				}
 			}
 			
@@ -117,7 +122,7 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				 
 			}
 			
 		});
@@ -139,14 +144,67 @@ public class Main {
 	}
 	
 	private JComponent makeLibrarianTab() {
-		JButton button1 = new JButton("Add a New Book/Book Copy");
-		JButton button2 = new JButton("Generate Report for Checked Out Items");
-		JButton button3 = new JButton("Generate Report for Most Popular Items");
+		JButton button1 = new JButton("Add a New Book");
+		JButton button2 = new JButton("Add New Book Copy");
+		JButton button3 = new JButton("Generate Report for Checked Out Items");
+		JButton button4 = new JButton("Generate Report for Most Popular Items");
 		JPanel panel = new JPanel(false);
 		panel.setLayout(new GridLayout(1,1,1,1));
 		panel.add(button1);
 		panel.add(button2);
 		panel.add(button3);
+		panel.add(button4);
+		
+		button1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JTextField bIsbn = new JTextField(5);
+				JTextField bCall = new JTextField(5);
+				JTextField bTitle = new JTextField(5);
+				JTextField bMauthor = new JTextField(5);
+				JTextField bPublisher = new JTextField(5);
+				JTextField bYear = new JTextField(5);
+				
+				JPanel panel = new JPanel(false);
+				panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+				panel.add(new JLabel("Call Number:"));
+				panel.add(bCall);
+				panel.add(new JLabel("ISBN:"));
+				panel.add(bIsbn);
+				panel.add(new JLabel("Title:"));
+				panel.add(bTitle);
+				panel.add(new JLabel("Main Author:"));
+				panel.add(bMauthor);
+				panel.add(new JLabel("Publisher"));
+				panel.add(bPublisher);
+				panel.add(new JLabel("Year"));
+				panel.add(bYear);
+				
+				int result = JOptionPane.showConfirmDialog(null, panel, "Add Book", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE);
+				if (result == JOptionPane.OK_OPTION) {
+					String message = "";
+					try {
+						System.out.println(Integer.parseInt(bIsbn.getText()));
+						System.out.println(bCall.getText());
+						System.out.println(bTitle.getText());
+						System.out.println(bMauthor.getText());
+						System.out.println(bPublisher.getText());
+						System.out.println(Integer.parseInt(bYear.getText()));
+						message = book.insertBook(Integer.parseInt(bIsbn.getText()), bCall.getText(), bTitle.getText(), bMauthor.getText(), bPublisher.getText(), Integer.parseInt(bYear.getText()));	
+					} catch (SQLException e) {
+						message = "SQL Exception";
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						message = "IO Exception";
+					}
+					JOptionPane.showMessageDialog(null, message, "Insert Status", JOptionPane.PLAIN_MESSAGE);
+				}
+
+			}
+			
+		});
 		return panel;
 	}
 

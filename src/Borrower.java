@@ -52,7 +52,7 @@ public class Borrower {
 	      ps.setNull(8, java.sql.Types.DATE);
 	  else  
 	      ps.setDate(8, expiryDate);
-	      ps.setString(9, null);	  
+	      ps.setString(9, borrower_type);	  
 	  if(ps.executeUpdate()==0)
 		  msg = "insertion failed";
 	  else
