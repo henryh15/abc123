@@ -53,6 +53,7 @@ public class Main {
 		panel.add(button2);
 		panel.add(button3);
 		panel.add(button4);
+		System.out.println("test");
 		button1.addActionListener(new ActionListener() {
 
 			@Override
